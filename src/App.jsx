@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Droplet, Plus, RotateCcw, Bell, Award, Sparkles, CheckCircle2 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
-const DAILY_GOAL = 4500; // 4.5 Liters in ml
+const DAILY_GOAL = 4500; // 4.5 Liters
 
 const MOTIVATIONAL_QUOTES = [
   "Small sips lead to big energy!",
@@ -12,6 +10,37 @@ const MOTIVATIONAL_QUOTES = [
   "A sip now keeps fatigue away!",
   "Water is your body's cleanest fuel."
 ];
+
+// Clean inline SVG Icons (No external dependencies needed)
+const DropletIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+  </svg>
+);
+
+const ResetIcon = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  </svg>
+);
+
+const PlusIcon = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+  </svg>
+);
+
+const SparkleIcon = ({ className }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z" />
+  </svg>
+);
+
+const CheckIcon = ({ className }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+  </svg>
+);
 
 export default function App() {
   const [intake, setIntake] = useState(() => {
@@ -29,9 +58,6 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('oasis_intake', intake);
     localStorage.setItem('oasis_date', new Date().toDateString());
-    if (intake >= DAILY_GOAL) {
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-    }
   }, [intake]);
 
   useEffect(() => {
@@ -56,68 +82,124 @@ export default function App() {
   const litersGoal = (DAILY_GOAL / 1000).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-between p-5 select-none font-sans">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#030712',
+      color: '#f8fafc',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '24px 16px',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
       {/* Top Header */}
-      <header className="w-full max-w-sm flex items-center justify-between pt-2">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-2xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400">
-            <Droplet className="w-6 h-6 fill-violet-400" />
+      <header style={{ width: '100%', maxWidth: '380px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '14px',
+            backgroundColor: 'rgba(139, 92, 246, 0.15)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#a78bfa'
+          }}>
+            <DropletIcon className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-white">Oasis Hydration</h1>
-            <p className="text-xs text-violet-300/70 font-medium">Daily Goal: {litersGoal} L</p>
+            <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '700' }}>Oasis Hydration</h1>
+            <p style={{ margin: 0, fontSize: '0.8rem', color: '#c4b5fd', opacity: 0.8 }}>Daily Goal: {litersGoal} L</p>
           </div>
         </div>
         <button
           onClick={resetWater}
-          className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-rose-400 transition-colors"
+          style={{
+            padding: '10px',
+            borderRadius: '12px',
+            background: '#111827',
+            border: '1px solid #1f2937',
+            color: '#9ca3af',
+            cursor: 'pointer'
+          }}
           title="Reset daily log"
         >
-          <RotateCcw className="w-4 h-4" />
+          <ResetIcon className="w-4 h-4" />
         </button>
       </header>
 
-      {/* Center Circular Progress */}
-      <div className="my-auto flex flex-col items-center w-full max-w-sm">
-        <div className="relative w-64 h-64 rounded-full flex items-center justify-center p-3 bg-gradient-to-b from-violet-600/20 to-purple-900/10 border border-violet-500/20 shadow-[0_0_50px_rgba(139,92,246,0.15)]">
-          {/* Animated Liquid Background Ring */}
-          <div
-            className="absolute inset-2 rounded-full border-4 border-violet-500/10 transition-all duration-700"
-            style={{
-              background: `radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(109,40,217,0.05) 100%)`,
-            }}
-          />
-
-          <div className="z-10 flex flex-col items-center text-center">
-            <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-200 via-purple-300 to-violet-400 tracking-tight">
-              {progressPercent}%
+      {/* Circular Progress Gauge */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '380px' }}>
+        <div style={{
+          position: 'relative',
+          width: '260px',
+          height: '260px',
+          borderRadius: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(15,23,42,0.8) 100%)',
+          border: '2px solid rgba(139, 92, 246, 0.3)',
+          boxShadow: '0 0 40px rgba(139, 92, 246, 0.2)'
+        }}>
+          <span style={{
+            fontSize: '3.5rem',
+            fontWeight: '900',
+            background: 'linear-gradient(to right, #ddd6fe, #a78bfa, #c084fc)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            {progressPercent}%
+          </span>
+          <span style={{ fontSize: '0.95rem', fontWeight: '600', color: '#c4b5fd', marginTop: '4px' }}>
+            {litersLogged} / {litersGoal} Liters
+          </span>
+          {intake >= DAILY_GOAL && (
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.75rem',
+              color: '#34d399',
+              marginTop: '10px',
+              background: 'rgba(6, 78, 59, 0.5)',
+              padding: '4px 10px',
+              borderRadius: '9999px',
+              border: '1px solid rgba(16, 185, 129, 0.3)'
+            }}>
+              <CheckIcon className="w-3.5 h-3.5" /> Goal Reached!
             </span>
-            <span className="text-sm font-semibold text-violet-300/80 mt-1">
-              {litersLogged} / {litersGoal} Liters
-            </span>
-            {intake >= DAILY_GOAL && (
-              <span className="inline-flex items-center gap-1 text-xs text-emerald-400 font-medium mt-2 bg-emerald-950/50 px-2.5 py-1 rounded-full border border-emerald-500/30">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Target Achieved!
-              </span>
-            )}
-          </div>
+          )}
         </div>
 
-        {/* Motivation Card */}
-        <div className="mt-6 w-full p-4 rounded-2xl bg-gradient-to-r from-violet-950/40 to-slate-900/40 border border-violet-800/20 flex items-center gap-3">
-          <Sparkles className="w-5 h-5 text-violet-400 flex-shrink-0" />
-          <p className="text-xs text-violet-200/90 italic leading-snug">
+        {/* Motivational Quote Banner */}
+        <div style={{
+          marginTop: '28px',
+          width: '100%',
+          padding: '14px 16px',
+          borderRadius: '16px',
+          background: 'linear-gradient(135deg, rgba(76, 29, 149, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%)',
+          border: '1px solid rgba(139, 92, 246, 0.2)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <SparkleIcon className="w-5 h-5 text-violet-400" />
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#e9d5ff', fontStyle: 'italic' }}>
             "{MOTIVATIONAL_QUOTES[quoteIndex]}"
           </p>
         </div>
       </div>
 
-      {/* Quick Add Intake Actions */}
-      <footer className="w-full max-w-sm pb-4 flex flex-col gap-3">
-        <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold text-center">
-          Quick Log
+      {/* Quick Add Buttons */}
+      <footer style={{ width: '100%', maxWidth: '380px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <p style={{ margin: 0, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', textAlign: 'center', fontWeight: '600' }}>
+          Quick Add
         </p>
-        <div className="grid grid-cols-3 gap-2.5">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {[
             { ml: 250, label: 'Cup' },
             { ml: 500, label: 'Bottle' },
@@ -126,11 +208,22 @@ export default function App() {
             <button
               key={item.ml}
               onClick={() => addWater(item.ml)}
-              className="py-3 px-2 rounded-2xl bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/25 hover:border-violet-400/40 transition-all flex flex-col items-center justify-center active:scale-95"
+              style={{
+                padding: '14px 8px',
+                borderRadius: '16px',
+                background: 'rgba(139, 92, 246, 0.12)',
+                border: '1px solid rgba(139, 92, 246, 0.25)',
+                color: '#ffffff',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '2px'
+              }}
             >
-              <Plus className="w-4 h-4 text-violet-400 mb-0.5" />
-              <span className="font-bold text-sm text-white">{item.ml} ml</span>
-              <span className="text-[10px] text-violet-300/70">{item.label}</span>
+              <PlusIcon className="w-4 h-4 text-violet-400" />
+              <span style={{ fontWeight: '700', fontSize: '0.95rem' }}>{item.ml} ml</span>
+              <span style={{ fontSize: '0.7rem', color: '#c4b5fd', opacity: 0.8 }}>{item.label}</span>
             </button>
           ))}
         </div>
