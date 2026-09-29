@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Oasis Hydration</string>
+    <string name="title_activity_main">Oasis Hydration</string>
+    <string name="package_name">com.oasis.watertracker</string>
+    <string name="custom_url_scheme">com.oasis.watertracker</string>
+</resources>
